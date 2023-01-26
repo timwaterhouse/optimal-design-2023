@@ -5,25 +5,27 @@ Packages:
   - mrgsolve
   - caTools
   - bitops
+  - here
   - rprojroot
-  - metrumrg
   - rmarkdown
-  - PopED
-  - rbabylon
+  - bbr
   - xaringan
   - RefManageR
   - kableExtra
+  - PopED
+  - PFIM
 
 Repos:
-  - MPN: https://mpn.metworx.com/snapshots/stable/2020-05-27
-  - CRAN_Micro: https://cran.microsoft.com/snapshot/2020-05-23
+  - MPN: https://mpn.metworx.com/snapshots/stable/2022-12-21
+  - CRAN_Micro: https://cran.microsoft.com/snapshot/2023-01-26
 
 Customizations:
   Packages:
-  - metrumrg:
-      Suggests: true
-  - xaringan:
+  - bbr: {Suggests: true}
+  - PFIM:
       Repos: CRAN_Micro
       
 Lockfile:
     Type: renv
+
+Rpath: ${R_EXE_4_1}

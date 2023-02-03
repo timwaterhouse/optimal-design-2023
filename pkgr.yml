@@ -16,7 +16,7 @@ Packages:
   - PFIM
 
 Repos:
-  - MPN: https://mpn.metworx.com/snapshots/stable/2022-12-21
+  - MPN: https://mpn.metworx.com/snapshots/stable/2023-01-25
   - CRAN_Micro: https://cran.microsoft.com/snapshot/2023-01-26
 
 Customizations:

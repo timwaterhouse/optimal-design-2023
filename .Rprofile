@@ -1,4 +1,4 @@
-mpn_date <- "2022-12-21"
+mpn_date <- "2023-01-25"
 
 mpn_url <- paste0("https://mpn.metworx.com/snapshots/stable/", mpn_date, "/")
 

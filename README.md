@@ -1,6 +1,6 @@
 # A Gentle Introduction to Optimal Design for Pharmacometric Models
 
-This repo contains the material for the [COOPED UP webinar on optimal design](https://metrumrg.com/course/a-gentle-introduction-to-optimaldesign-for-pharmacometric-models/), given on June 8, 2020.
+A work in progress for an upcoming webinar.
 
 The slides are available as a [PDF file](slides/slides.pdf) or [in HTML](slides/slides.html), although you'll need to download or clone the repo in order to view the HTML slides.
 

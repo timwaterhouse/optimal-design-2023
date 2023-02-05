@@ -4,9 +4,11 @@
     <title>A Gentle Introduction to Optimal Design for Pharmacometric Models</title>
     <meta charset="utf-8" />
     <meta name="author" content="Tim Waterhouse" />
+    <script src="libs/header-attrs-2.20/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
     <script src="libs/kePrint-0.0.1/kePrint.js"></script>
+    <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
     <link rel="stylesheet" href="tweaks.css" type="text/css" />
   </head>
   <body>
@@ -20,10 +22,11 @@
 class: title-slide   
 
 # A Gentle Introduction to Optimal Design &lt;br/&gt; for Pharmacometric Models
-## with PopED and mrgsolve
+## with PopED, PFIM, and mrgsolve
 
-## Tim Waterhouse &lt;br/&gt; Metrum Research Group
-## 8 June, 2020
+## Tim Waterhouse &amp; Kyle Baron &lt;br/&gt; Metrum Research Group
+## Julie Betrand &amp; Romain Leroux&lt;br/&gt; Université de Paris, INSERM, IAME
+## 28 March, 2023
 
 ---
 
@@ -102,54 +105,6 @@ background-size: cover
 
 Image credit: [Flickr](https://www.flickr.com/photos/davidden/70342823/)
 
----
-
-background-image: linear-gradient(90deg, rgba(255,255,255,1) 50%, rgba(0,0,0,0) 70%), url(https://live.staticflickr.com/3061/2599260050_539b8904c7_k_d.jpg)
-background-size: cover
-  
-# Acknowledgements
-
-.pull-left[
-* Kyle Baron
-
-* Devin Pastoor
-
-* Seth Green
-]
-
-???
-
-Image credit: [Flickr](https://www.flickr.com/photos/tinahesmansaey/2599260050)
-
----
-
-class: poll-slide
-
-# Poll Question #1
-
-## What is your experience with optimal design?
-
-1. Never heard of it.
-
---
-
-2. I've seen it around, and I'd like to try it.
-
---
-
-3. I've seen it around, but it seems kinda dodgy.
-
---
-
-4. I've used optimal design for some studies.
-
---
-
-5. I invert Fisher information matrices in my head.
-
---
-
-6. Huh? Sorry, I was checking email.
 ---
 
 class: inverse, center, middle
@@ -423,7 +378,7 @@ Although methods exist for optimal determination of the windows, you will mostly
 
 # Tools for optimal design
 
-&lt;img src="pics/tools.png" width="1077" /&gt;
+![](pics/tools.png)&lt;!-- --&gt;
 
 .footnote[Nyberg, Bazzoli, Ogungbenro, Aliev, Leonov, Duffull, Hooker, and Mentré (2014)]
 
@@ -432,7 +387,7 @@ Although methods exist for optimal determination of the windows, you will mostly
 # PopED
 
 .pull-left[
-&lt;img src="pics/PopED_logo.png" width="522" /&gt;
+![](pics/PopED_logo.png)&lt;!-- --&gt;
 ]
 
 .pull-right[
@@ -696,8 +651,8 @@ get_rse(FIM, poped_db)
 ```
 
 ```
-.      bpop[1]      bpop[2]      bpop[3]       D[1,1]       D[2,2]       D[3,3] 
-. 2.983306e+05 3.132072e+06 4.936333e+06 5.192188e+01 4.888612e+02 6.485818e+02 
+.           CL            V           KA         d_CL          d_V         d_KA 
+. 2.983332e+05 3.132099e+06 4.936376e+06 5.192188e+01 4.888612e+02 6.485818e+02 
 .   SIGMA[1,1]   SIGMA[2,2] 
 . 2.997297e+01 4.082483e+01
 ```
@@ -712,7 +667,7 @@ get_rse(FIM2, poped_db2)
 ```
 
 ```
-.    bpop[1]    bpop[2]    bpop[3]     D[1,1]     D[2,2]     D[3,3] SIGMA[1,1] 
+.         CL          V         KA       d_CL        d_V       d_KA SIGMA[1,1] 
 .   15.48778  142.08530  223.35925   50.88485  418.53695  549.75962   29.68444 
 . SIGMA[2,2] 
 .   40.82396
@@ -816,7 +771,7 @@ get_rse(FIM_extra_ss, poped_db_extra_ss)
 ```
 
 ```
-.    bpop[1]    bpop[2]    bpop[3]     D[1,1]     D[2,2]     D[3,3] SIGMA[1,1] 
+.         CL          V         KA       d_CL        d_V       d_KA SIGMA[1,1] 
 .   13.38487   80.99149  119.36373   46.82132  253.41994  288.82097   24.18497 
 . SIGMA[2,2] 
 .   40.80823
@@ -900,7 +855,7 @@ get_rse(FIM_final, poped_db_final)
 ```
 
 ```
-.    bpop[1]    bpop[2]    bpop[3]     D[1,1]     D[2,2]     D[3,3] SIGMA[1,1] 
+.         CL          V         KA       d_CL        d_V       d_KA SIGMA[1,1] 
 .   12.31062   86.75053  136.64068   50.42738  317.03881  419.93344   29.55819 
 . SIGMA[2,2] 
 .   28.95827
@@ -982,7 +937,7 @@ get_rse(FIM_practical, poped_db_practical)
 ```
 
 ```
-.    bpop[1]    bpop[2]    bpop[3]     D[1,1]     D[2,2]     D[3,3] SIGMA[1,1] 
+.         CL          V         KA       d_CL        d_V       d_KA SIGMA[1,1] 
 .   10.15307   19.61044   22.79548   48.67831   97.63716   74.56113   26.52843 
 . SIGMA[2,2] 
 .   40.69749
@@ -1191,7 +1146,7 @@ We include log-normal IIV on `CL`, `VMAX`, and `V1`, and a proportional residual
 
 ```
 . 
-. Model file:  model_poped.cpp 
+. Model file:  model_poped.mod 
 . [ param ]
 . CL = 1, VMAX = 10, KM = 10, V1 = 8, Q = 10, V2 = 100
 . 
@@ -1279,10 +1234,10 @@ get_rse(FIM_mrg, poped_db_mrg)
 ```
 
 ```
-.    bpop[1]    bpop[2]    bpop[3]    bpop[4]    bpop[5]    bpop[6]     D[1,1] 
-.  10.874541  10.660202   7.935122   6.355306   8.894763   3.620234  38.990317 
-.     D[2,2]     D[3,3] SIGMA[1,1] 
-.  32.096512  31.668012  10.775738
+.         CL       VMAX         KM         V1          Q         V2       d_CL 
+.  10.874298  10.660146   7.935583   6.355286   8.894680   3.620177  38.989274 
+.     d_VMAX       d_V1 SIGMA[1,1] 
+.  32.096484  31.667595  10.775830
 ```
 
 ---
@@ -1419,7 +1374,7 @@ class: inverse, center, middle
 
 .pull-right[
 
-&lt;img src="pics/gcsf_paper.png" width="681" /&gt;
+![](pics/gcsf_paper.png)&lt;!-- --&gt;
 
 * PK/PD model from DDMORE .font-80[http://repository.ddmore.eu/model/DDMODEL00000077.6]
 
@@ -1437,7 +1392,7 @@ class: inverse, center, middle
 &lt;img src="pics/gcsf_model.png" width="85%" /&gt;
 ]
 
-.footnote[Krzyzanski, Wiczling, Lowe, et al. (2010)]
+.footnote[Krzyzanski, Wiczling, Lowe et al. (2010)]
 
 ---
 
@@ -1461,12 +1416,12 @@ get_rse(FIM_gcsf, poped_db_gcsf)
 
 
 ```
-.    bpop[2]    bpop[5]    bpop[6]    bpop[7]    bpop[8]    bpop[9]   bpop[11] 
+.         KA        KEL         VD         KD       KINT        KSI        KMT 
 .   3.289140  13.518742  12.604107   8.265412   3.822461  19.528269   4.066511 
-.   bpop[13]   bpop[14]   bpop[15]   bpop[16]   bpop[17]     D[1,1]     D[2,2] 
-.  17.017908  10.771361  20.851250   8.289988   7.664966  26.961113  32.644613 
-.     D[3,3]     D[5,5]     D[6,6]     D[7,7] SIGMA[1,1] SIGMA[3,3] SIGMA[4,4] 
-.  31.369081  41.941250  29.156946  26.406506   3.900224   6.541108   7.713365
+.        KTT        NB0        SC1        SM1        SM2      d_KEL       d_VD 
+.  17.017908  10.771361  20.851250   8.289988   7.664966  25.751319  31.052193 
+.      d_KSI      d_NB0      d_SC1      d_SM1 SIGMA[1,1] SIGMA[3,3] SIGMA[4,4] 
+.  45.933297  31.526309  29.156946  26.406506   3.900224   6.541108   7.713365
 ```
 
 ---
@@ -1644,28 +1599,28 @@ Image credit: [Flickr](https://www.flickr.com/photos/dmuth/6039404304)
 
 # References
 
-Foracchia, M, A. Hooker, P. Vicini, et al. (2004). "POPED, a software
+Foracchia, M., A. Hooker, P. Vicini, et al. (2004). "POPED, a software
 for optimal experiment design in population kinetics". In: _Comput.
 Methods Programs Biomed._ 74.1, pp. 29-46.
 
-Krzyzanski, W, P. Wiczling, P. Lowe, et al. (2010). "Population
+Krzyzanski, W., P. Wiczling, P. Lowe, et al. (2010). "Population
 modeling of filgrastim PK-PD in healthy adults following intravenous
 and subcutaneous administrations". In: _J. Clin. Pharmacol._ 50.9
 Suppl, pp. 101S-112S.
 
-Mentre, F, A. Mallet, and D. Baccar (1997). "Optimal design in
+Mentre, F., A. Mallet, and D. Baccar (1997). "Optimal design in
 random-effects regression models". In: _Biometrika_ 84.2, pp. 429-442.
 
-Nyberg, J, C. Bazzoli, K. Ogungbenro, et al. (2014). "Methods and
+Nyberg, J., C. Bazzoli, K. Ogungbenro, et al. (2014). "Methods and
 software tools for design evaluation for population
 pharmacokinetics-pharmacodynamics studies". In: _Br. J. Clin.
 Pharmacol._.
 
-Nyberg, J, S. Ueckert, E. A. Strömberg, et al. (2012). "PopED: an
+Nyberg, J., S. Ueckert, E. A. Strömberg, et al. (2012). "PopED: an
 extended, parallelized, nonlinear mixed effects models optimal design
 tool". In: _Comput. Methods Programs Biomed._ 108.2, pp. 789-805.
 
-Retout, S, S. Duffull, and F. Mentre (2001). "Development and
+Retout, S., S. Duffull, and F. Mentre (2001). "Development and
 implementation of the population Fisher information matrix for the
 evaluation of population pharmacokinetic designs". In: _Comput. Methods
 Programs Biomed._ 65.2, pp. 141-151.
@@ -2164,6 +2119,19 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     deleted = true;
   });
 })();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
 (function() {
   "use strict"
   // Replace <script> tags in slides area to make them executable

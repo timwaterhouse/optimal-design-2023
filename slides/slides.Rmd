@@ -3,7 +3,7 @@ title: "A Gentle Introduction to Optimal Design for Pharmacometric Models"
 subtitle: "with PopED and mrgsolve"
 author: "Tim Waterhouse"
 institute: "Metrum Research Group"
-date: "8 June, 2020"
+date: "28 March, 2023"
 output:
   xaringan::moon_reader:
     css: ["tweaks.css", "default", "default-fonts"]
@@ -26,6 +26,7 @@ library(PopED)
 library(mrgsolve)
 library(glue)
 library(kableExtra)
+library(here)
 theme_set(theme_bw())
 ```
 
@@ -39,16 +40,17 @@ BibOptions(
   hyperlink = FALSE,
   dashed = FALSE
 )
-myBib <- ReadBib("./refs.bib", check = FALSE)
+myBib <- ReadBib(here("slides/refs.bib"), check = FALSE)
 ```
 
 class: title-slide   
 
 # A Gentle Introduction to Optimal Design <br/> for Pharmacometric Models
-## with PopED and mrgsolve
+## with PopED, PFIM, and mrgsolve
 
-## Tim Waterhouse <br/> Metrum Research Group
-## 8 June, 2020
+## Tim Waterhouse & Kyle Baron <br/> Metrum Research Group
+## Julie Betrand & Romain Leroux<br/> Université de Paris, INSERM, IAME
+## 28 March, 2023
 
 ---
 
@@ -127,54 +129,6 @@ background-size: cover
 
 Image credit: [Flickr](https://www.flickr.com/photos/davidden/70342823/)
 
----
-
-background-image: linear-gradient(90deg, rgba(255,255,255,1) 50%, rgba(0,0,0,0) 70%), url(https://live.staticflickr.com/3061/2599260050_539b8904c7_k_d.jpg)
-background-size: cover
-  
-# Acknowledgements
-
-.pull-left[
-* Kyle Baron
-
-* Devin Pastoor
-
-* Seth Green
-]
-
-???
-
-Image credit: [Flickr](https://www.flickr.com/photos/tinahesmansaey/2599260050)
-
----
-
-class: poll-slide
-
-# Poll Question #1
-
-## What is your experience with optimal design?
-
-1. Never heard of it.
-
---
-
-2. I've seen it around, and I'd like to try it.
-
---
-
-3. I've seen it around, but it seems kinda dodgy.
-
---
-
-4. I've used optimal design for some studies.
-
---
-
-5. I invert Fisher information matrices in my head.
-
---
-
-6. Huh? Sorry, I was checking email.
 ---
 
 class: inverse, center, middle
@@ -626,7 +580,7 @@ Note that we reach steady state very quickly (the half-life is around 7 hours), 
 
 class: poll-slide
 
-# Poll Question #2
+# Pop Quiz
 
 ## Which of these designs will give us the best<sup>*</sup> RSE for KA, assuming a single 10 mg dose in 10 adult (70 kg) subjects?
 
@@ -680,16 +634,11 @@ $t_\textrm{max} \approx$ 6 hours]
 4. `r designs %>% dplyr::filter(design == "Design 4") %>% pull(xt)` hours
 {{content}}
 
---
-
-5. My kid came looking for snacks and I missed everything you just said.
-{{content}}
-
 ---
 
 class: poll-slide
 
-# Poll Question #2
+# Pop Quiz
 
 ## Which of these designs will give us the best<sup>*</sup> RSE for KA, assuming a single 10 mg dose in 10 adult (70 kg) subjects?
 
@@ -933,7 +882,7 @@ summary(output)
 .pull-right-60[
 .font-90[
 ```{r echo=FALSE}
-output <- readRDS("../script/opt1.rds")
+output <- readRDS(here("script/opt1.rds"))
 summary(output)
 ```
 ]
@@ -1010,7 +959,7 @@ summary(output_extra_ss)
 .pull-right-60[
 .font-90[
 ```{r echo=FALSE}
-output_extra_ss <- readRDS("../script/opt2.rds")
+output_extra_ss <- readRDS(here("script/opt2.rds"))
 summary(output_extra_ss)
 ```
 ]]
@@ -1061,7 +1010,7 @@ summary(output_final)
 .pull-right-60[
 .font-90[
 ```{r echo=FALSE}
-output_final <- readRDS("../script/opt3.rds")
+output_final <- readRDS(here("script/opt3.rds"))
 summary(output_final)
 ```
 ]]
@@ -1168,7 +1117,7 @@ sum_est <- function(.est) {
   
   return(output)
 }
-est <- readRDS("../script/ex1_est2.rds")
+est <- readRDS(here("script/ex1_est2.rds"))
 plot_est(est)
 ```
 ]
@@ -1228,7 +1177,7 @@ tibble(
 # Model in `mrgsolve`
 
 ```{r echo=FALSE}
-mod <- mread(file.path("../script/model", "model_poped"))
+mod <- mread(here("script/model/model_poped.mod"))
 see(mod)
 ```
 
@@ -1381,7 +1330,7 @@ plot_efficiency_of_windows(
 
 .pull-right[
 ```{r fig.width=5, fig.height=5, out.width='100%', echo=FALSE}
-p <- readRDS("../script/windows_mrg.rds")
+p <- readRDS(here("script/windows_mrg.rds"))
 p
 ```
 ]
@@ -1402,7 +1351,7 @@ Again, the 100 sets of simulated samples show no significant deviations from the
 
 .pull-left[
 ```{r echo=FALSE, fig.height=4, fig.width=4, out.width='100%'}
-est <- readRDS("../script/ex2_est1.rds")
+est <- readRDS(here("script/ex2_est1.rds"))
 plot_est(est)
 ```
 ]
@@ -1470,7 +1419,7 @@ knitr::include_graphics("pics/gcsf_model.png")
 
 .center[
 ```{r echo=FALSE, fig.width=6, fig.height=3, out.width="80%"}
-mod_gcsf <- mread(file.path("../script/model", "gcsf_poped"))
+mod_gcsf <- mread(here("script/model/gcsf_poped.mod"))
 doses <- c(0.1, 0.3, 1, 3, 10, 30)
 e <- expand.ev(amt = 75*doses, ii = 24, addl = 6)
 sim_gcsf <- mod_gcsf %>% mrgsim_df(e,  end = 240)
@@ -1678,7 +1627,7 @@ get_rse(FIM_gcsf, poped_db_gcsf)
 ```
 
 ```{r echo=FALSE}
-FIM_gcsf <- readRDS("../script/FIM_gcsf.rds")
+FIM_gcsf <- readRDS(here("script/FIM_gcsf.rds"))
 get_rse(FIM_gcsf, poped_db_gcsf)
 ```
 
@@ -1686,7 +1635,7 @@ get_rse(FIM_gcsf, poped_db_gcsf)
 
 class: poll-slide
 
-# Poll Question #3
+# Pop Quiz
 
 ## Any better doses for estimating SC50 or Smax?
 
@@ -1738,22 +1687,16 @@ sim_gcsf %>%
 4. `r designs %>% dplyr::filter(design == "Design 4") %>% pull(dose)` &mu;g/kg
 {{content}}
 
---
-
-5. Are you still talking? I think you're on mute.
-{{content}}
-
-
 ---
 
 class: poll-slide
 
-# Poll Question #3
+# Pop Quiz
 
 ## Any better doses for estimating $SC_{50}$ or $S_\textrm{max}$?
 
 ```{r echo=FALSE}
-rse_gcsf <- readRDS("../script/rse_gcsf.rds")
+rse_gcsf <- readRDS(here("script/rse_gcsf.rds"))
 as.data.frame(bind_cols(design = unique(designs[["design"]]), rse_gcsf)) %>% 
   mutate_if(is.numeric, round, 1) %>% 
   t() %>% 

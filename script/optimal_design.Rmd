@@ -20,7 +20,7 @@ BibOptions(
   hyperlink = TRUE,
   dashed = FALSE
 )
-myBib <- ReadBib("../slides/refs.bib", check = FALSE)
+myBib <- ReadBib(here::here("slides/refs.bib"), check = FALSE)
 ```
 
 This document gives a brief background on optimal design of experiments and how it can be applied to studies involving PK/PD models.  We give an example of PK sampling time selection using the R package [`PopED`](https://cran.r-project.org/web/packages/PopED/index.html).  If you don't care about how this works (although you probably should), you can skip the background.
@@ -67,11 +67,11 @@ Although methods exist for optimal determination of the windows, you will mostly
 # Packages and setup
 
 ```{r message=FALSE}
-requireNamespace("metrumrg")
 library(tidyverse)
 library(mrgsolve)
 library(PopED)
-library(rbabylon) 
+library(bbr) 
+library(here)
 theme_set(theme_bw())
 ```
 
@@ -110,11 +110,11 @@ tibble(
   knitr::kable()
 ```
 
-We include log-normal IIV on `CL`, `V`, and `KA`, and a combined additive and proportional residual error.
+We include log-normal IIV on `CL`, `V`, and `KA`, and a proportional residual error.
 
 ```{r echo=FALSE}
 tibble(
-  om_CL = 0.08, om_V = 0.1, om_KA = 0.2, sigma_prop = 0.05, sigma_add = 1
+  om_CL = 0.08, om_V = 0.1, om_KA = 0.2, sigma_prop = 0.05
 ) %>% 
   knitr::kable()
 ```
@@ -220,11 +220,11 @@ Now that we have our model defined, we bring it all together with details of the
 poped_db <- create.poped.database(
   ff_fun = ff,
   fg_fun = fg,
-  fError_fun = feps.add.prop,
+  fError_fun = feps.prop,
   bpop = c(CL = 10, V = 100, KA = 0.25, WT_CL = 0.75, WT_V = 1), 
   notfixed_bpop = c(1, 1, 1, 0, 0),
   d = c(CL = 0.08, V = 0.1, KA = 0.2), 
-  sigma = c(0.05, 1),
+  sigma = c(0.05),
   m = 1,
   groupsize = 12,
   xt = c(5, c(rep(24, 3), 168)),
@@ -365,11 +365,11 @@ We'll create the PopED database from scratch again.  This is probably easier tha
 poped_db_extra_ss <- create.poped.database(
   ff_fun = ff,
   fg_fun = fg,
-  fError_fun = feps.add.prop,
+  fError_fun = feps.prop,
   bpop = c(CL = 10, V = 100, KA = 0.25, WT_CL = 0.75, WT_V = 1), 
   notfixed_bpop = c(1, 1, 1, 0, 0),
   d = c(CL = 0.08, V = 0.1, KA = 0.2), 
-  sigma = c(0.05, 1),
+  sigma = c(0.05),
   m = 1,
   groupsize = 12,
   xt = c(5, c(rep(24, 3), 4, 168)),
@@ -545,7 +545,7 @@ write_data <- function(.design_dir, .run_num, .times = NULL, .times_lo = NULL, .
 }
 ```
 
-The next function performs 2 steps for each replicate: (1) take the template control stream and adjusts it to point to the relevant dataset and set the random seed; and (2) runs the model using `rbabylon`.  Additional info on the use and functionality of `rbabylon` is available at https://github.com/metrumresearchgroup/rbabylon.
+The next function performs 2 steps for each replicate: (1) take the template control stream and adjusts it to point to the relevant dataset and set the random seed; and (2) runs the model using `bbr`.  Additional info on the use and functionality of `bbr` is available at https://metrumresearchgroup.github.io/bbr/.
 
 ```{r}
 run_model <- function(.design_dir, .run_num) {
@@ -627,27 +627,27 @@ times <- c(5, c(rep(24, 3), 168) + 24)
 ```
 
 
-Set up rbabylon to run nonmem - we also need the bbi executable. You can run  to install onto your system.
+Set up bbr to run nonmem - we also need the bbi executable. You can run  to install onto your system.
 Note, bbi is primarily tested and developed on linux and mac. Though it should work for windows, the configuration used here
-may not map 1:1 to windows usage. Check github.com/metrumresearchgroup/rbabylon for more information.
+may not map 1:1 to windows usage. Check https://metrumresearchgroup.github.io/bbr/ for more information.
 
 ```
 # once per machine:
-rbabylon::use_bbi()
+bbr::use_bbi()
 
-# create babylon.yaml in model directory - this should only need to get run once per new project/directory
+# create bbi.yaml in model directory - this should only need to get run once per new project/directory
 bbi_init(
   .dir = design_dir,           # your modeling directory
   .nonmem_dir = "/opt/NONMEM", # directory where NONMEM is installed
-  .nonmem_version = "nm74gf"   # default version of NONMEM to use
+  .nonmem_version = "nm75"   # default version of NONMEM to use
 )
 ```
 
 ```{r eval=FALSE}
-rbabylon::bbi_init(
+bbr::bbi_init(
   .dir = design_dir,           # your modeling directory
   .nonmem_dir = "/opt/NONMEM", # directory where NONMEM is installed
-  .nonmem_version = "nm74gf"   # default version of NONMEM to use
+  .nonmem_version = "nm75"   # default version of NONMEM to use
 )
 walk(seq_len(n_rep), function(run_num) {
   write_data(design_dir, run_num, .times = times)
@@ -1250,8 +1250,8 @@ bind_cols(design = unique(designs[["design"]]), rse_gcsf)
 
 * `PopED`: https://andrewhooker.github.io/PopED/
 * `mrgsolve`: https://mrgsolve.github.io/
-* `babylon`: https://github.com/metrumresearchgroup/babylon
-  + `rbabylon`: https://metrumresearchgroup.github.io/rbabylon/
+* `bbi`: https://github.com/metrumresearchgroup/bbi
+  + `bbr`: https://metrumresearchgroup.github.io/bbr/
 
 # References
 

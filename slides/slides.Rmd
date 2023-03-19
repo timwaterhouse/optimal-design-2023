@@ -116,7 +116,7 @@ background-size: cover
 
 --
 
-* Simple model with `PopED`
+* Simple model with `PopED` and `PFIM`
     + Evaluation
     + Optimization
     + Simulation
@@ -191,7 +191,7 @@ when $\hat{\mathbf{\Psi}}$ is an unbiased estimator of $\mathbf{\Psi}$.
 
 --
 
-.center[![](https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/240/apple/237/smiling-face-with-sunglasses_1f60e.png)]
+.center[<img src="https://whatemoji.org/wp-content/uploads/2020/07/Smiling-Face-With-Sunglasses-Emoji.png" width="200">]
 
 ???
 
@@ -445,6 +445,16 @@ knitr::include_graphics("pics/tools.png")
 
 ---
 
+# Notable exception: NONMEM `$DESIGN`
+
+.center[
+<img src="pics/nonmem-design-webinar.png" alt="" title="" width="70%"  style="border: 3px solid red"/>
+]
+
+.footnote[[Recording: https://sites.google.com/view/mcssig/mcs-sig#h.v7bdq6l7d86v](https://sites.google.com/view/mcssig/mcs-sig#h.v7bdq6l7d86v)]
+
+---
+
 # PopED
 
 .pull-left[
@@ -460,6 +470,24 @@ knitr::include_graphics("pics/PopED_logo.png")
 ]
 .footnote[`r Citet(myBib, "Foracchia2004-yc")` <br>
 `r Citet(myBib, "Nyberg2012-gd")`]
+
+---
+
+# PFIM
+
+.pull-left[
+```{r echo=F}
+# knitr::include_graphics("pics/PopED_logo.png")
+```
+]
+
+.pull-right[
+* http://www.pfim.biostat.fr/
+
+* Previously set of R functions, now an R package
+* Also available as GUI: PFIM Interface
+]
+.footnote[`r Citet(myBib, "Leroux2022")`]
 
 ---
 
@@ -611,7 +639,7 @@ tibble(xt = seq(0, 96, by = 1)) %>%
 ```
 ]
 
-.footnote[[*]According to `PopED` </br>
+.footnote[[*]According to FIM </br>
 $t_\textrm{max} \approx$ 6 hours]
 
 .pull-right[
@@ -799,7 +827,7 @@ Image credit: [Flickr](https://www.flickr.com/photos/dmuth/6039404494)
 
 ---
 
-# Plot of initial design
+# `PopED`: Plot of initial design
 
 .pull-left[
 ```{r test-plot-1, fig.show="hide", fig.width=4, fig.height=4}
@@ -824,7 +852,7 @@ plot_model_prediction(
 
 ---
 
-# Evaluate FIM
+# `PopED`: Evaluate FIM
 
 ```{r}
 FIM <- evaluate.fim(poped_db) 
@@ -837,7 +865,15 @@ det(FIM)
 get_rse(FIM, poped_db)
 ```
 
---
+???
+
+This determinant is what will be used to optimize the design, but it's not particularly helpful by itself.  What we really need are the predicted standard errors based on the FIM.
+
+The RSEs are crazy high, which suggests that the model is not identifiable.  A slight tweak to a single timepoint (increasing the number of support points) may help.
+
+---
+
+# `PopED`: Tweak timepoint and evaluate FIM
 
 ```{r}
 poped_db2 <- create.poped.database( poped_db, xt = c(5, c(23, 24, 24, 168)) )
@@ -847,15 +883,11 @@ get_rse(FIM2, poped_db2)
 
 ???
 
-This determinant is what will be used to optimize the design, but it's not particularly helpful by itself.  What we really need are the predicted standard errors based on the FIM.
-
-The RSEs are crazy high, which suggests that the model is not identifiable.  A slight tweak to a single timepoint (increasing the number of support points) may help.
-
 The RSEs are no longer in the millions, but certainly not as low as we'd hope for. Let's see if we can make any improvements with optimization.
 
 ---
 
-# *D*-optimal design: Starting from the original design
+# `PopED`: *D*-optimal design: Starting from the original design
 
 .pull-left-40[
 ```{r eval=FALSE}
@@ -895,7 +927,7 @@ Better, but still not good enough.
 
 ---
 
-# Add another post dose sample at SS
+# `PopED`: Add another post dose sample at SS
 
 ```{r echo=FALSE}
 poped_db_extra_ss <- create.poped.database(
@@ -941,7 +973,7 @@ We'll create the PopED database from scratch again.  This is probably easier tha
 
 ---
 
-# *D*-optimal design: Add another post dose sample at SS
+# `PopED`: *D*-optimal design: Add another post dose sample at SS
 
 .pull-left-40[
 ```{r ,eval=FALSE}
@@ -966,7 +998,7 @@ summary(output_extra_ss)
 
 ---
 
-# Add sample after the final (SS) dose
+# `PopED`: Add sample after the final (SS) dose
 
 ```{r}
 poped_db_final <- create.poped.database(
@@ -992,7 +1024,7 @@ This time we can just update the previous PopED database.
 
 ---
 
-# *D*-optimal design: Add sample after the final (SS) dose
+# `PopED`: *D*-optimal design: Add sample after the final (SS) dose
 
 .pull-left-40[
 ```{r eval=FALSE}
@@ -1017,7 +1049,7 @@ summary(output_final)
 
 ---
 
-# Near-optimal design
+# `PopED`: Near-optimal design
 
 ```{r}
 poped_db_practical <- create.poped.database(
@@ -1060,7 +1092,7 @@ plot_model_prediction(
 
 ---
 
-# Sampling windows
+# `PopED`: Sampling windows
 
 .pull-left[
 ```{r test-plot-3, fig.show="hide", fig.width=5, fig.height=5}
@@ -1135,6 +1167,448 @@ sum_est(est) %>%
 ]]
 
 ---
+
+background-image: linear-gradient(90deg, rgba(255,255,255,1) 50%, rgba(0,0,0,0) 70%), url(https://live.staticflickr.com/6136/6039404494_a6cccf1f4a_k_d.jpg)
+background-size: cover
+  
+# The `PFIM` setup
+
+.pull-left[
+`PFIM` requires types 3 of objects in order to define a `StatisticalModel`:
+
+* `ModelEquations`, the structural model;
+
+* `ModelParameter`, the parameter models (including IIV and IOV);
+
+* `Response`, including the residual error model.
+
+A `PFIMProject` object collects together these model objects with everything related to study design:
+
+* `Arm` objects, which include `SamplingTimes` and `Administration` objects.
+]
+
+???
+
+Image credit: [Flickr](https://www.flickr.com/photos/dmuth/6039404494)
+
+---
+
+# `PFIM`: Plot of initial design
+
+.pull-left[
+```{r pfim-test-plot-1, eval=FALSE}
+evaluationPop <- EvaluatePopulationFIM(MyProject)
+plotOptions <- list(
+  unitTime = c("hr"),
+  unitResponses = c("ng/ml")
+)
+
+plotResponse <- plotResponse(
+  evaluationPop,
+  plotOptions
+)
+
+print(plotResponse[[1]])
+```
+]
+
+.pull-right[
+![](pfim-ex1-fig-profile.png)
+]
+
+???
+
+`PFIM` includes a function to generate a quick test plot showing the typical response(s), along with the initial sampling times.
+
+---
+
+# `PFIM`: Evaluate FIM
+
+```{r eval=FALSE}
+evaluationPop <- EvaluatePopulationFIM(MyProject)
+show(evaluationPop)
+```
+
+--
+
+```
+****************************  design1  ******************************* 
+
+   Arm_name Response tau Tinf                        Time_dose                                            Amount_dose          Sampling_times Number_of_subjects
+1 Bras test  RespPK1   -    - 0, 24, 48, 72, 96, 120, 144, 168 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000 (5, 120, 144, 168, 336)                 12
+```
+
+---
+
+# `PFIM`: Evaluate FIM
+
+```{r eval=FALSE}
+evaluationPop <- EvaluatePopulationFIM(MyProject)
+show(evaluationPop)
+```
+
+```
+*************************
+Fisher information matrix 
+*************************
+
+**** Fixed effect 
+
+             μ_Cl        μ_ka          μ_V
+μ_Cl  0.594311668  -0.8211656 -0.002425272
+μ_ka -0.821165609 564.9226170 -2.218057475
+μ_V  -0.002425272  -2.2180575  0.008762577
+```
+
+---
+
+# `PFIM`: Evaluate FIM
+
+```{r eval=FALSE}
+evaluationPop <- EvaluatePopulationFIM(MyProject)
+show(evaluationPop)
+```
+
+```
+*************************
+Fisher information matrix 
+*************************
+
+**** Variance components 
+
+                      ω²_Cl       ω²_ka        ω²_V σ_inter_RespPK1 σ_slope_RespPK1
+ω²_Cl           147.1693161   0.1756023   0.2450810       0.1067300        7.591955
+ω²_ka             0.1756023  51.9429628 128.1192438       0.2065110       21.923776
+ω²_V              0.2450810 128.1192438 319.9281155       0.4876588       51.107443
+σ_inter_RespPK1   0.1067300   0.2065110   0.4876588      34.2620161      238.748328
+σ_slope_RespPK1   7.5919547  21.9237756  51.1074432     238.7483285     5561.894327
+```
+
+---
+
+# `PFIM`: Evaluate FIM
+
+```{r eval=FALSE}
+evaluationPop <- EvaluatePopulationFIM(MyProject)
+show(evaluationPop)
+```
+
+```
+******************
+Correlation matrix  
+******************
+
+**** Fixed effect 
+
+     μ_Cl μ_ka μ_V
+μ_Cl    1    1   1
+μ_ka    1    1   1
+μ_V     1    1   1
+```
+
+---
+
+# `PFIM`: Evaluate FIM
+
+```{r eval=FALSE}
+evaluationPop <- EvaluatePopulationFIM(MyProject)
+show(evaluationPop)
+```
+
+```
+******************
+Correlation matrix  
+******************
+
+**** Variance components 
+
+                       ω²_Cl        ω²_ka         ω²_V σ_inter_RespPK1 σ_slope_RespPK1
+ω²_Cl            1.000000000 -0.007756317  0.007627033     0.003569392    -0.008783515
+ω²_ka           -0.007756317  1.000000000 -0.993851261     0.013130503    -0.027650113
+ω²_V             0.007627033 -0.993851261  1.000000000    -0.010893393     0.022752548
+σ_inter_RespPK1  0.003569392  0.013130503 -0.010893393     1.000000000    -0.547261481
+σ_slope_RespPK1 -0.008783515 -0.027650113  0.022752548    -0.547261481     1.000000000
+```
+
+---
+
+# `PFIM`: Evaluate FIM
+
+```{r eval=FALSE}
+evaluationPop <- EvaluatePopulationFIM(MyProject)
+show(evaluationPop)
+```
+
+```
+**********************************************
+Determinant, condition numbers and D-criterion 
+**********************************************
+
+                                        [,1]
+Determinant                     4.394250e+00
+Cond number fixed effects       1.718267e+14
+cond number variance components 1.017806e+04
+D-criterion                     1.203263e+00
+```
+
+---
+
+# `PFIM`: Evaluate FIM
+
+```{r eval=FALSE}
+evaluationPop <- EvaluatePopulationFIM(MyProject)
+show(evaluationPop)
+```
+
+```
+**********
+SE and RSE 
+**********
+
+                 Value           SE      RSE (%)
+μ_Cl             10.00 5.252748e+03  52527.47704
+μ_ka              0.25 2.172884e+03 869153.72640
+μ_V             100.00 5.514727e+05 551472.68815
+ω²_Cl             0.20 8.243712e-02     41.21856
+ω²_ka             0.08 1.254450e+00   1568.06291
+ω²_V              0.10 5.054008e-01    505.40077
+σ_inter_RespPK1   1.00 2.041242e-01     20.41242
+σ_slope_RespPK1   0.05 1.603788e-02     32.07577
+```
+
+---
+
+# `PFIM`: Plot RSE
+
+.pull-left-40[
+.font-90[
+```{r eval=FALSE}
+plotRSE <- plotRSE(evaluationPop)
+print(plotRSE[[1]])
+```
+]
+]
+
+.pull-right-60[
+![](pics/pfim-ex1-fig-rse.png)
+]
+
+---
+
+# `PFIM`: *D*-optimal design: Starting from the original design
+
+```{r eval=FALSE}
+brasTestDesign1 <- addSampling(brasTestDesign1, SamplingTimes(
+  outcome = "RespPK1",
+  sample_time = c(5, c(120, 144, 168), 336)
+))
+
+samplingBoundsConstraint <- SamplingConstraint(
+  response = "RespPK",
+  continuousSamplingTimes = list(
+    c(0, 6),
+    c(119, 120),
+    c(143, 144),
+    c(167, 168),
+    c(264, 336)
+  )
+)
+```
+
+---
+
+# `PFIM`: *D*-optimal design: Starting from the original design
+
+.pull-left[
+.font-90[
+```{r eval=FALSE}
+simplexOptimizer <- SimplexAlgorithm(
+  pct_initial_simplex_building = 20,
+  max_iteration = 5000,
+  tolerance = 1e-6
+)
+
+optimization_populationFIM <- OptimizeDesign(
+  MyProject,
+  simplexOptimizer,
+  PopulationFim()
+)
+
+show(optimization_populationFIM)
+```
+]
+]
+
+--
+
+.pull-right[
+.font-90[
+```
+**********
+SE and RSE 
+**********
+
+                 Value          SE   RSE (%)
+μ_Cl             10.00  1.38874526  13.88745
+μ_ka              0.25  0.22079467  88.31787
+μ_V             100.00 56.80758006  56.80758
+ω²_Cl             0.20  0.08241346  41.20673
+ω²_ka             0.08  0.48045173 600.56467
+ω²_V              0.10  0.19874160 198.74160
+σ_inter_RespPK1   1.00  0.20408418  20.40842
+σ_slope_RespPK1   0.05  0.01571215  31.42429
+```
+]
+]
+
+
+???
+
+Better, but still not good enough.
+
+---
+
+# `PFIM`: *D*-optimal design: Add another post dose sample at SS
+
+.pull-left[
+.font-90[
+```{r eval=FALSE}
+brasTestDesign1 <- addSampling(
+  brasTestDesign1,
+  SamplingTimes(
+    outcome = "RespPK1",
+    sample_time = c(5, c(120, 144, 168), 172, 336)
+  )
+)
+samplingBoundsConstraint <- SamplingConstraint(
+  response = "RespPK",
+  continuousSamplingTimes = list(
+    c(0, 6),
+    c(119, 120),
+    c(143, 144),
+    c(167, 168),
+    c(168, 174),
+    c(264, 336)
+  )
+)
+```
+]
+]
+
+.pull-right[
+```
+**********
+SE and RSE 
+**********
+
+                 Value          SE  RSE (%)
+μ_Cl             10.00  1.29838751 12.98388
+μ_ka              0.25  0.02665015 10.66006
+μ_V             100.00 10.80456819 10.80457
+ω²_Cl             0.20  0.08221782 41.10891
+ω²_ka             0.08  0.05033867 62.92333
+ω²_V              0.10  0.05118174 51.18174
+σ_inter_RespPK1   1.00  0.19844858 19.84486
+σ_slope_RespPK1   0.05  0.01098263 21.96525
+```
+]
+
+---
+
+# `PFIM`: Add sample after the final (SS) dose
+
+```{r}
+poped_db_final <- create.poped.database(
+  poped_db_extra_ss,
+  xt = c(5, c(rep(24, 3), 72, 168)),
+  minxt = c(0, c(rep(23, 3), 0, 168)),
+  maxxt = c(6, c(rep(24, 3), 168, 168))
+)
+```
+
+--
+
+```{r}
+FIM_final <- evaluate.fim(poped_db_final) 
+get_rse(FIM_final, poped_db_final)
+```
+
+???
+
+Add another sample after the final dose.
+
+This time we can just update the previous PopED database.
+
+---
+
+# `PFIM`: *D*-optimal design: Add sample after the final (SS) dose
+
+.pull-left-40[
+```{r eval=FALSE}
+output_final <- poped_optim(
+  poped_db_final,
+  opt_xt = TRUE,
+  parallel = TRUE,
+  parallel_type = "multicore",
+  seed = 1
+)
+summary(output_final)
+```
+]
+
+.pull-right-60[
+.font-90[
+```{r echo=FALSE}
+output_final <- readRDS(here("script/opt3.rds"))
+summary(output_final)
+```
+]]
+
+---
+
+# `PFIM`: Near-optimal design
+
+```{r}
+poped_db_practical <- create.poped.database(
+  poped_db_final,
+  xt = c(0.5, rep(24, 3), 32, 168)
+)
+```
+
+--
+
+```{r}
+FIM_practical <- evaluate.fim(poped_db_practical) 
+get_rse(FIM_practical, poped_db_practical)
+```
+
+???
+
+This optimal design serves us well, but it's not very practical to request a sample at 41.09 hours after the final dose.  For a dose at 8 AM, that would mean a sample at around 1 AM.  Instead we'll construct a similar design with more practical times and see how that affects our RSEs.  We can do this by building a new `PopED` database based on the previous one.
+
+This second-to-last sample at 32 hours would be at 4 PM the day after an 8 AM final dose.  More practical, and we don't seem to lose too much in terms of RSE.
+
+---
+
+.pull-left[
+```{r pfim-test-plot-2, fig.show="hide", fig.width=4, fig.height=4}
+plot_model_prediction(
+  poped_db_practical,
+  model.names = c("Day 1", "Steady state"),
+  facet_scales = "free_x",
+  model_num_points = 200
+) +
+  labs(x = "Time from dose (h)") +
+  theme_bw()
+```
+]
+
+.pull-right[
+![](`r knitr::fig_chunk("test-plot-2", "png")`)
+]
+
+---
+
 
 class: inverse, center, middle
 
@@ -1787,10 +2261,12 @@ background-size: cover
 .pull-left[
 * `PopED`: https://andrewhooker.github.io/PopED/
 
+* `PFIM`: http://www.pfim.biostat.fr/
+
 * `mrgsolve`: https://mrgsolve.github.io/
 
-* `babylon`: https://github.com/metrumresearchgroup/babylon
-  + `rbabylon`: https://metrumresearchgroup.github.io/rbabylon/
+* `bbi`: https://github.com/metrumresearchgroup/bbi
+  + `bbr`: https://metrumresearchgroup.github.io/bbr/
 ]
 
 ???
@@ -1801,9 +2277,13 @@ Image credit: [Flickr](https://www.flickr.com/photos/dmuth/6039404304)
 
 # References
 
+.font-80[
+
 ```{r refs, echo=FALSE, results="asis"}
 PrintBibliography(myBib)
 ```
+
+]
 
 ---
 
@@ -1838,7 +2318,7 @@ $ESTIMATION METHOD=1 INTER PRINT=1 MSFO=./run_num.msf
 
 ---
 
-# SSE: Run the models with `rbabylon`
+# SSE: Run the models with `bbr`
 
 ```{r eval=FALSE}
 run_model <- function(.design_dir, .run_num) {
@@ -1860,7 +2340,7 @@ run_model <- function(.design_dir, .run_num) {
 
 ---
 
-# SSE: Collect the results with `rbabylon`
+# SSE: Collect the results with `bbr`
 
 ```{r eval=FALSE}
 get_est <- function(.design_dir) {

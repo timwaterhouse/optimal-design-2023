@@ -14,6 +14,7 @@ Packages:
   - kableExtra
   - PopED
   - PFIM
+  - styler
 
 Repos:
   - MPN: https://mpn.metworx.com/snapshots/stable/2023-01-25

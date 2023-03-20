@@ -927,7 +927,7 @@ Better, but still not good enough.
 
 ---
 
-# `PopED`: Add another post dose sample at SS
+# `PopED`: Another post dose sample at SS
 
 ```{r echo=FALSE}
 poped_db_extra_ss <- create.poped.database(
@@ -973,7 +973,7 @@ We'll create the PopED database from scratch again.  This is probably easier tha
 
 ---
 
-# `PopED`: *D*-optimal design: Add another post dose sample at SS
+# `PopED`: *D*-optimal design: Another post dose sample at SS
 
 .pull-left-40[
 ```{r ,eval=FALSE}
@@ -998,7 +998,7 @@ summary(output_extra_ss)
 
 ---
 
-# `PopED`: Add sample after the final (SS) dose
+# `PopED`: Add sample after final (SS) dose
 
 ```{r}
 poped_db_final <- create.poped.database(
@@ -1024,7 +1024,7 @@ This time we can just update the previous PopED database.
 
 ---
 
-# `PopED`: *D*-optimal design: Add sample after the final (SS) dose
+# `PopED`: *D*-optimal design: Add sample after final (SS) dose
 
 .pull-left-40[
 ```{r eval=FALSE}
@@ -1213,7 +1213,7 @@ print(plotResponse[[1]])
 ]
 
 .pull-right[
-![](pfim-ex1-fig-profile.png)
+![](pics/pfim-ex1-fig-profile.png)
 ]
 
 ???
@@ -1444,6 +1444,13 @@ show(optimization_populationFIM)
 .pull-right[
 .font-90[
 ```
+*****************************
+ Optimal designs 
+*****************************
+
+4.98139743936754, 119.999815287607, 143.000000389577,
+167.999998299556, 271.44467773064
+
 **********
 SE and RSE 
 **********
@@ -1468,7 +1475,7 @@ Better, but still not good enough.
 
 ---
 
-# `PFIM`: *D*-optimal design: Add another post dose sample at SS
+# `PFIM`: *D*-optimal design: Another post dose sample at SS
 
 .pull-left[
 .font-90[
@@ -1495,8 +1502,18 @@ samplingBoundsConstraint <- SamplingConstraint(
 ]
 ]
 
+--
+
 .pull-right[
+.font-90[
 ```
+*****************************
+ Optimal designs 
+*****************************
+
+5.99998869005838, 119.002565130602, 143.972085758471,
+167.031903767095, 169.343414960844, 286.225935672166                 12
+
 **********
 SE and RSE 
 **********
@@ -1512,103 +1529,67 @@ SE and RSE
 σ_slope_RespPK1   0.05  0.01098263 21.96525
 ```
 ]
-
----
-
-# `PFIM`: Add sample after the final (SS) dose
-
-```{r}
-poped_db_final <- create.poped.database(
-  poped_db_extra_ss,
-  xt = c(5, c(rep(24, 3), 72, 168)),
-  minxt = c(0, c(rep(23, 3), 0, 168)),
-  maxxt = c(6, c(rep(24, 3), 168, 168))
-)
-```
-
---
-
-```{r}
-FIM_final <- evaluate.fim(poped_db_final) 
-get_rse(FIM_final, poped_db_final)
-```
-
-???
-
-Add another sample after the final dose.
-
-This time we can just update the previous PopED database.
-
----
-
-# `PFIM`: *D*-optimal design: Add sample after the final (SS) dose
-
-.pull-left-40[
-```{r eval=FALSE}
-output_final <- poped_optim(
-  poped_db_final,
-  opt_xt = TRUE,
-  parallel = TRUE,
-  parallel_type = "multicore",
-  seed = 1
-)
-summary(output_final)
-```
 ]
 
-.pull-right-60[
-.font-90[
-```{r echo=FALSE}
-output_final <- readRDS(here("script/opt3.rds"))
-summary(output_final)
-```
-]]
-
 ---
 
-# `PFIM`: Near-optimal design
-
-```{r}
-poped_db_practical <- create.poped.database(
-  poped_db_final,
-  xt = c(0.5, rep(24, 3), 32, 168)
-)
-```
-
---
-
-```{r}
-FIM_practical <- evaluate.fim(poped_db_practical) 
-get_rse(FIM_practical, poped_db_practical)
-```
-
-???
-
-This optimal design serves us well, but it's not very practical to request a sample at 41.09 hours after the final dose.  For a dose at 8 AM, that would mean a sample at around 1 AM.  Instead we'll construct a similar design with more practical times and see how that affects our RSEs.  We can do this by building a new `PopED` database based on the previous one.
-
-This second-to-last sample at 32 hours would be at 4 PM the day after an 8 AM final dose.  More practical, and we don't seem to lose too much in terms of RSE.
-
----
+# `PFIM`: *D*-optimal design: Add sample after final (SS) dose
 
 .pull-left[
-```{r pfim-test-plot-2, fig.show="hide", fig.width=4, fig.height=4}
-plot_model_prediction(
-  poped_db_practical,
-  model.names = c("Day 1", "Steady state"),
-  facet_scales = "free_x",
-  model_num_points = 200
-) +
-  labs(x = "Time from dose (h)") +
-  theme_bw()
+.font-90[
+```{r eval=FALSE}
+brasTestDesign1 <- addSampling(
+  brasTestDesign1,
+  SamplingTimes(
+    outcome = "RespPK1",
+    sample_time = c(5, c(120, 144, 168), 240, 336)
+  )
+)
+samplingBoundsConstraint <- SamplingConstraint(
+  response = "RespPK",
+  continuousSamplingTimes = list(
+    c(0, 6),
+    c(119, 120),
+    c(143, 144),
+    c(167, 168),
+    c(168, 336),
+    c(336, 336)
+  )
+)
 ```
 ]
+]
+
+--
 
 .pull-right[
-![](`r knitr::fig_chunk("test-plot-2", "png")`)
+.font-90[
+```
+*****************************
+ Optimal designs 
+*****************************
+
+4.52576291331019, 119.000000458829, 143.000791500247,
+169.416690394867, 205.731885951118, 331.266297788294
+
+**********
+SE and RSE 
+**********
+
+                 Value          SE  RSE (%)
+μ_Cl             10.00  1.29952262 12.99523
+μ_ka              0.25  0.02873640 11.49456
+μ_V             100.00 10.96078787 10.96079
+ω²_Cl             0.20  0.08235915 41.17958
+ω²_ka             0.08  0.05679475 70.99344
+ω²_V              0.10  0.05102656 51.02656
+σ_inter_RespPK1   1.00  0.18241440 18.24144
+σ_slope_RespPK1   0.05  0.01236994 24.73988
+```
+]
 ]
 
 ---
-
 
 class: inverse, center, middle
 
@@ -1657,7 +1638,7 @@ see(mod)
 
 ---
 
-# `ff()` for `mrgsolve` model
+# `PopED`: `ff()` for `mrgsolve` model
 
 .pull-left[
 .font-80[
@@ -1702,7 +1683,7 @@ ff <- function(model_switch, xt, parameters, poped.db) {
 
 ---
 
-# Plot of initial design
+# `PopED`: Plot of initial design
 
 ```{r echo=FALSE}
 ff <- function(model_switch, xt, parameters, poped.db) {
@@ -1781,7 +1762,7 @@ plot_model_prediction(
 
 ---
 
-# Evaluate FIM
+# `PopED`: Evaluate FIM
 
 ```{r}
 FIM_mrg <- evaluate.fim(poped_db_mrg) 
@@ -1790,7 +1771,7 @@ get_rse(FIM_mrg, poped_db_mrg)
 
 ---
 
-# Sampling windows
+# `PopED`: Sampling windows
 
 .pull-left[
 ```{r eval=FALSE}
@@ -1841,6 +1822,88 @@ sum_est(est) %>%
   knitr::kable(format = "html")
 ```
 ]]
+
+---
+
+# `PFIM`: ODE model
+
+```{r eval=FALSE}
+MyStatisticalModel <- StatisticalModel()
+MyStatisticalModel <- setParametersOdeSolver(MyStatisticalModel, list(atol = 1e-16, rtol = 1e-6, .relStep = 1e-12))
+
+MyModelEquations <- ModelODEquations(
+  list(
+    "RespPK1" = expression(C1),
+    "RespPK2" = expression(C2)
+  ),
+  list(
+    "Deriv_C1" = expression((Q / V2) * C2 - (Q / V1) * C1 - VMAX * (C1 / V1) /
+                              (KM + (C1 / V1)) - (CL / V1) * C1),
+    "Deriv_C2" = expression((Q / V1) * C1 - (Q / V2) * C2)
+  )
+)
+
+MyStatisticalModel <- defineModelEquations(MyStatisticalModel, MyModelEquations)
+
+vC1 <- ModelVariable("C1/V1")
+vC2 <- ModelVariable("C2")
+
+MyStatisticalModel <- defineVariable(MyStatisticalModel, vC1)
+MyStatisticalModel <- defineVariable(MyStatisticalModel, vC2)
+```
+
+---
+
+# `PFIM`: Plot of initial design
+
+.center[<img src="pics/pfim-ex2-fig-profile.png" width="700">]
+
+
+---
+
+# `PFIM`: Evaluate FIM
+
+```{r eval=FALSE}
+evaluationPop <- EvaluatePopulationFIM(MyProject)
+show(evaluationPop)
+```
+
+--
+
+```
+**********
+SE and RSE 
+**********
+
+               Value           SE      RSE (%)
+μ_CL            0.50 0.0384775981  7.695519616
+μ_KM            1.20 0.0196656516  1.638804302
+μ_Q            10.00 0.0005779689  0.005779689
+μ_V1            2.50 0.1498846589  5.995386356
+μ_V2            4.00 0.1009500500  2.523751249
+μ_VMAX         20.00 1.8703324957  9.351662478
+ω²_CL           0.20 0.0497454303 24.872715150
+ω²_V1           0.10 0.0246396407 24.639640672
+ω²_VMAX         0.20 0.0603291975 30.164598760
+σ_slope_RespPK  0.15 0.0085116372  5.674424799
+```
+
+---
+
+# `PFIM`: Plot RSE
+
+.pull-left-40[
+.font-90[
+```{r eval=FALSE}
+plotRSE <- plotRSE(evaluationPop)
+print(plotRSE[[1]])
+```
+]
+]
+
+.pull-right-60[
+![](pics/pfim-ex2-fig-rse.png)
+]
 
 ---
 
@@ -2244,7 +2307,7 @@ background-size: cover
 
 --
 
-* Almost all of `PopED`'s options
+* Almost all options available in `PopED` and `PFIM`
 {{content}}
 
 ???

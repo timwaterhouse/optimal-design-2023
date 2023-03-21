@@ -477,15 +477,15 @@ knitr::include_graphics("pics/PopED_logo.png")
 
 .pull-left[
 ```{r echo=F}
-# knitr::include_graphics("pics/PopED_logo.png")
+knitr::include_graphics("pics/pfim2.png")
 ```
 ]
 
 .pull-right[
 * http://www.pfim.biostat.fr/
 
-* Previously set of R functions, now an R package
-* Also available as GUI: PFIM Interface
+* Previously set of R functions, now an R package (Version 5.0)
+* Version 4.0 also available as GUI: PFIM Interface
 ]
 .footnote[`r Citet(myBib, "Leroux2022")`]
 

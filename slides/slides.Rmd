@@ -148,11 +148,11 @@ $$ M_F(\mathbf{\Psi},\xi)
 
 where
 
-* $\mathbf{\Psi}$ is the vector of populations parameters (e.g. `THETA`s, `OMEGA`s, and `SIGMA`s in NONMEM),
+* $\mathbf{\Psi}$ is the vector of population parameters (e.g., `THETA`s, `OMEGA`s, and `SIGMA`s in NONMEM),
 
 * $y$ is the vector of observations,
 
-* $\xi$ is the vector of design variables (e.g. sampling times), and
+* $\xi$ is the vector of design variables (e.g., sampling times), and
 
 * $\log L$ is the log-likelihood.
 ]
@@ -354,7 +354,7 @@ background-size: cover
 # Evaluation vs Optimisation
 
 .pull-left[
-* Optimal design can be used to optimise a study (duh)
+* Optimal design can be used to optimise a study design (duh)
 {{content}}
 ]
 
@@ -1957,7 +1957,7 @@ knitr::include_graphics("pics/gcsf_model.png")
 .center[
 ```{r echo=FALSE, fig.width=6, fig.height=3, out.width="80%"}
 mod_gcsf <- mread(here("script/model/gcsf_poped.mod"))
-doses <- c(0.1, 0.3, 1, 3, 10, 30)
+doses <- c(0.3, 1, 3, 10, 30)
 e <- expand.ev(amt = 75*doses, ii = 24, addl = 6)
 sim_gcsf <- mod_gcsf %>% mrgsim_df(e,  end = 240)
 sim_gcsf %>%
@@ -2154,7 +2154,7 @@ poped_db_gcsf <- create.poped.database(
   ),
   bUseGrouped_xt = TRUE,
   a = cbind(DOSE = c(1, 3, 10), WT = 75, TAU = 24),
-  discrete_a = list(DOSE = c(0.1, 0.3, 1, 3, 10, 30), WT = 75, TAU = 24)
+  discrete_a = list(DOSE = c(0.3, 1, 3, 10, 30), WT = 75, TAU = 24)
 )
 ```
 
@@ -2180,8 +2180,8 @@ class: poll-slide
 designs <- bind_cols(
   `Design 1` = c(1, 3, 10),
   `Design 2` = c(0.3, 1, 3),
-  `Design 3` = c(0.3, 1, 10),
-  `Design 4` = c(0.1, 1, 3)
+  `Design 3` = c(3, 10, 30)
+  #`Design 4` = c(0.1, 1, 3)
 ) %>% 
   gather("design", "dose")
 ```
@@ -2219,11 +2219,6 @@ sim_gcsf %>%
 3. `r designs %>% dplyr::filter(design == "Design 3") %>% pull(dose)` &mu;g/kg
 {{content}}
 
---
-
-4. `r designs %>% dplyr::filter(design == "Design 4") %>% pull(dose)` &mu;g/kg
-{{content}}
-
 ---
 
 class: poll-slide
@@ -2238,12 +2233,12 @@ as.data.frame(bind_cols(design = unique(designs[["design"]]), rse_gcsf)) %>%
   mutate_if(is.numeric, round, 1) %>% 
   t() %>% 
   as_tibble(rownames = "Parameter") %>% 
-  set_names(c("Parameter", .[1,2:5])) %>% 
+  set_names(c("Parameter", .[1,2:4])) %>% 
   slice(-1) %>% 
-  dplyr::filter(str_detect(Parameter, "15|16|17")) %>% 
+  dplyr::filter(Parameter %in% c("SC1", "SM1", "SM2")) %>% 
   knitr::kable(format = "html") %>% 
   row_spec(0, color = "black", background = "white") %>% 
-  column_spec(1:5, color = "black", background = "white")
+  column_spec(1:4, color = "black", background = "white")
 ```
 
 ---

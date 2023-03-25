@@ -110,11 +110,11 @@ tibble(
   knitr::kable()
 ```
 
-We include log-normal IIV on `CL`, `V`, and `KA`, and a proportional residual error.
+We include log-normal IIV on `CL`, `V`, and `KA`, and a combined additive and proportional residual error.
 
 ```{r echo=FALSE}
 tibble(
-  om_CL = 0.08, om_V = 0.1, om_KA = 0.2, sigma_prop = 0.05
+  om_CL = 0.08, om_V = 0.1, om_KA = 0.2, sigma_prop = 0.05, sigma_add = 1
 ) %>% 
   knitr::kable()
 ```
@@ -220,11 +220,11 @@ Now that we have our model defined, we bring it all together with details of the
 poped_db <- create.poped.database(
   ff_fun = ff,
   fg_fun = fg,
-  fError_fun = feps.prop,
+  fError_fun = feps.add.prop,
   bpop = c(CL = 10, V = 100, KA = 0.25, WT_CL = 0.75, WT_V = 1), 
   notfixed_bpop = c(1, 1, 1, 0, 0),
   d = c(CL = 0.08, V = 0.1, KA = 0.2), 
-  sigma = c(0.05),
+  sigma = c(0.05, 1),
   m = 1,
   groupsize = 12,
   xt = c(5, c(rep(24, 3), 168)),
@@ -345,11 +345,11 @@ output <- poped_optim(
   parallel_type = "multicore",
   seed = 1
 )
-saveRDS(output, "opt1.rds")
+saveRDS(output, here("script/opt1.rds"))
 ```
 
 ```{r}
-output <- readRDS("opt1.rds")
+output <- readRDS(here("script/opt1.rds"))
 summary(output)
 ```
 
@@ -365,11 +365,11 @@ We'll create the PopED database from scratch again.  This is probably easier tha
 poped_db_extra_ss <- create.poped.database(
   ff_fun = ff,
   fg_fun = fg,
-  fError_fun = feps.prop,
+  fError_fun = feps.add.prop,
   bpop = c(CL = 10, V = 100, KA = 0.25, WT_CL = 0.75, WT_V = 1), 
   notfixed_bpop = c(1, 1, 1, 0, 0),
   d = c(CL = 0.08, V = 0.1, KA = 0.2), 
-  sigma = c(0.05),
+  sigma = c(0.05, 1),
   m = 1,
   groupsize = 12,
   xt = c(5, c(rep(24, 3), 4, 168)),
@@ -393,11 +393,11 @@ output_extra_ss <- poped_optim(
   parallel_type = "multicore",
   seed = 1
 )
-saveRDS(output_extra_ss, "opt2.rds")
+saveRDS(output_extra_ss, here("script/opt2.rds"))
 ```
 
 ```{r}
-output_extra_ss <- readRDS("opt2.rds")
+output_extra_ss <- readRDS(here("script/opt2.rds"))
 summary(output_extra_ss)
 ```
 
@@ -429,11 +429,11 @@ output_final <- poped_optim(
   parallel_type = "multicore",
   seed = 1
 )
-saveRDS(output_final, "opt3.rds")
+saveRDS(output_final, here("script/opt3.rds"))
 ```
 
 ```{r}
-output_final <- readRDS("opt3.rds")
+output_final <- readRDS(here("script/opt3.rds"))
 summary(output_final)
 ```
 
@@ -657,11 +657,11 @@ walk(seq_len(n_rep), function(run_num) {
 
 ```{r eval=FALSE}
 est <- get_est(design_dir)
-saveRDS(est, "ex1_est1.rds")
+saveRDS(est, here("script/ex1_est1.rds"))
 ```
 
 ```{r}
-est <- readRDS("ex1_est1.rds")
+est <- readRDS(here("script/ex1_est1.rds"))
 plot_est(est) + scale_y_continuous(limits =  c(-110, 500))
 ```
 
@@ -697,11 +697,11 @@ walk(seq_len(n_rep), function(run_num) {
 
 ```{r eval=FALSE}
 est <- get_est(design_dir)
-saveRDS(est, "ex1_est2.rds")
+saveRDS(est, here("script/ex1_est2.rds"))
 ```
 
 ```{r}
-est <- readRDS("ex1_est2.rds")
+est <- readRDS(here("script/ex1_est2.rds"))
 plot_est(est)
 ```
 
@@ -864,11 +864,11 @@ p <- plot_efficiency_of_windows(
   xt_plus  = c(rep(1/24, 2), rep(3/24, 5)),
   xt_minus = c(rep(1/24, 2), rep(3/24, 5))
 )
-saveRDS(p, "windows_mrg.rds")
+saveRDS(p, here("script/windows_mrg.rds"))
 ```
 
 ```{r}
-p <- readRDS("windows_mrg.rds")
+p <- readRDS(here("script/windows_mrg.rds"))
 p
 ```
 
@@ -957,11 +957,11 @@ walk(seq_len(n_rep), function(run_num) {
 
 ```{r eval=FALSE}
 est <- get_est(design_dir)
-saveRDS(est, "ex2_est1.rds")
+saveRDS(est, here("script/ex2_est1.rds"))
 ```
 
 ```{r}
-est <- readRDS("ex2_est1.rds")
+est <- readRDS(here("script/ex2_est1.rds"))
 plot_est(est)
 ```
 
@@ -981,7 +981,7 @@ See the slides for more background on this example.
 [Model](https://github.com/mrgsolve/depot/blob/master/pkg/inst/models/gcsf.cpp)
 
 ```{r}
-mod_gcsf <- mread(file.path("model", "gcsf_poped")) %>% zero_re()
+mod_gcsf <- mread(here("script/model/gcsf_poped.mod")) %>% zero_re()
 
 e <- expand.ev(amt = 75*c(1, 3, 10), ii = 24, addl = 6)
 mod_gcsf %>% mrgsim(e, Req = "ANC = RESP", end = 240) %>% plot(ANC ~time)
@@ -1207,11 +1207,11 @@ plot_model_prediction(
 
 ```{r eval=FALSE}
 system.time(FIM_gcsf <- evaluate.fim(poped_db_gcsf))
-saveRDS(FIM_gcsf, "FIM_gcsf.rds")
+saveRDS(FIM_gcsf, here("script/FIM_gcsf.rds"))
 ```
 
 ```{r}
-FIM_gcsf <- readRDS("FIM_gcsf.rds")
+FIM_gcsf <- readRDS(here("script/FIM_gcsf.rds"))
 get_rse(FIM_gcsf, poped_db_gcsf)
 ```
 
@@ -1221,8 +1221,8 @@ get_rse(FIM_gcsf, poped_db_gcsf)
 designs <- bind_cols(
   `Design 1` = c(1, 3, 10),
   `Design 2` = c(0.3, 1, 3),
-  `Design 3` = c(0.3, 1, 10),
-  `Design 4` = c(0.1, 1, 3)
+  `Design 3` = c(3, 10, 30)
+  #`Design 4` = c(0.1, 1, 3)
 ) %>% 
   gather("design", "dose")
 ```
@@ -1238,11 +1238,11 @@ rse_gcsf <- map_dfr(unique(designs[["design"]]), function(.design) {
   FIM_gcsf_tmp <- evaluate.fim(poped_db_gcsf_tmp)
   as.list(get_rse(FIM_gcsf_tmp, poped_db_gcsf_tmp))
 })
-saveRDS(rse_gcsf, "rse_gcsf.rds")
+saveRDS(rse_gcsf, here("script/rse_gcsf.rds"))
 ```
 
 ```{r}
-rse_gcsf <- readRDS("rse_gcsf.rds")
+rse_gcsf <- readRDS(here("script/rse_gcsf.rds"))
 bind_cols(design = unique(designs[["design"]]), rse_gcsf)
 ```
 

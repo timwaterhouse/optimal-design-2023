@@ -927,7 +927,7 @@ Better, but still not good enough.
 
 ---
 
-# `PopED`: Another post dose sample at SS
+# `PopED`: Add sample after final (SS) dose
 
 ```{r echo=FALSE}
 poped_db_extra_ss <- create.poped.database(
@@ -948,57 +948,6 @@ poped_db_extra_ss <- create.poped.database(
 )
 ```
 
-```{r eval=FALSE}
-poped_db_extra_ss <- create.poped.database(
-  ...
-  xt = c(5, c(rep(24, 3), 4, 168)),
-  minxt = c(0, c(rep(23, 3), 0, 96)),
-  maxxt = c(6, c(rep(24, 3), 6, 168)),
-  ...
-)
-```
-
---
-
-```{r}
-FIM_extra_ss <- evaluate.fim(poped_db_extra_ss) 
-get_rse(FIM_extra_ss, poped_db_extra_ss)
-```
-
-???
-
-Add another post dose sample at steady state.
-
-We'll create the PopED database from scratch again.  This is probably easier than updating an old database when you change the number of samples because certain vectors (like `grouped_xt`) are generated automatically if you don't supply the argument and we don't want to fuss with that.
-
----
-
-# `PopED`: *D*-optimal design: Another post dose sample at SS
-
-.pull-left-40[
-```{r ,eval=FALSE}
-output_extra_ss <- poped_optim(
-  poped_db_extra_ss,
-  opt_xt = TRUE,
-  parallel = TRUE,
-  parallel_type = "multicore",
-  seed = 1
-)
-summary(output_extra_ss)
-```
-]
-
-.pull-right-60[
-.font-90[
-```{r echo=FALSE}
-output_extra_ss <- readRDS(here("script/opt2.rds"))
-summary(output_extra_ss)
-```
-]]
-
----
-
-# `PopED`: Add sample after final (SS) dose
 
 ```{r}
 poped_db_final <- create.poped.database(
@@ -1070,25 +1019,6 @@ get_rse(FIM_practical, poped_db_practical)
 This optimal design serves us well, but it's not very practical to request a sample at 41.09 hours after the final dose.  For a dose at 8 AM, that would mean a sample at around 1 AM.  Instead we'll construct a similar design with more practical times and see how that affects our RSEs.  We can do this by building a new `PopED` database based on the previous one.
 
 This second-to-last sample at 32 hours would be at 4 PM the day after an 8 AM final dose.  More practical, and we don't seem to lose too much in terms of RSE.
-
----
-
-.pull-left[
-```{r test-plot-2, fig.show="hide", fig.width=4, fig.height=4}
-plot_model_prediction(
-  poped_db_practical,
-  model.names = c("Day 1", "Steady state"),
-  facet_scales = "free_x",
-  model_num_points = 200
-) +
-  labs(x = "Time from dose (h)") +
-  theme_bw()
-```
-]
-
-.pull-right[
-![](`r knitr::fig_chunk("test-plot-2", "png")`)
-]
 
 ---
 
@@ -1472,64 +1402,6 @@ SE and RSE
 ???
 
 Better, but still not good enough.
-
----
-
-# `PFIM`: *D*-optimal design: Another post dose sample at SS
-
-.pull-left[
-.font-90[
-```{r eval=FALSE}
-brasTestDesign1 <- addSampling(
-  brasTestDesign1,
-  SamplingTimes(
-    outcome = "RespPK1",
-    sample_time = c(5, c(120, 144, 168), 172, 336)
-  )
-)
-samplingBoundsConstraint <- SamplingConstraint(
-  response = "RespPK",
-  continuousSamplingTimes = list(
-    c(0, 6),
-    c(119, 120),
-    c(143, 144),
-    c(167, 168),
-    c(168, 174),
-    c(264, 336)
-  )
-)
-```
-]
-]
-
---
-
-.pull-right[
-.font-90[
-```
-*****************************
- Optimal designs 
-*****************************
-
-5.99998869005838, 119.002565130602, 143.972085758471,
-167.031903767095, 169.343414960844, 286.225935672166                 12
-
-**********
-SE and RSE 
-**********
-
-                 Value          SE  RSE (%)
-μ_Cl             10.00  1.29838751 12.98388
-μ_ka              0.25  0.02665015 10.66006
-μ_V             100.00 10.80456819 10.80457
-ω²_Cl             0.20  0.08221782 41.10891
-ω²_ka             0.08  0.05033867 62.92333
-ω²_V              0.10  0.05118174 51.18174
-σ_inter_RespPK1   1.00  0.19844858 19.84486
-σ_slope_RespPK1   0.05  0.01098263 21.96525
-```
-]
-]
 
 ---
 

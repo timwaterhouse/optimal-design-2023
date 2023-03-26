@@ -772,94 +772,10 @@ Better, but still not good enough.
 
 ---
 
-# `PopED`: Another post dose sample at SS
-
-
-
-
-```r
-poped_db_extra_ss &lt;- create.poped.database(
-  ...
-  xt = c(5, c(rep(24, 3), 4, 168)),
-  minxt = c(0, c(rep(23, 3), 0, 96)),
-  maxxt = c(6, c(rep(24, 3), 6, 168)),
-  ...
-)
-```
-
---
-
-
-```r
-FIM_extra_ss &lt;- evaluate.fim(poped_db_extra_ss) 
-get_rse(FIM_extra_ss, poped_db_extra_ss)
-```
-
-```
-.         CL          V         KA       d_CL        d_V       d_KA SIGMA[1,1] 
-.   13.38487   80.99149  119.36373   46.82132  253.41994  288.82097   24.18497 
-. SIGMA[2,2] 
-.   40.80823
-```
-
-???
-
-Add another post dose sample at steady state.
-
-We'll create the PopED database from scratch again.  This is probably easier than updating an old database when you change the number of samples because certain vectors (like `grouped_xt`) are generated automatically if you don't supply the argument and we don't want to fuss with that.
-
----
-
-# `PopED`: *D*-optimal design: Another post dose sample at SS
-
-.pull-left-40[
-
-```r
-output_extra_ss &lt;- poped_optim(
-  poped_db_extra_ss,
-  opt_xt = TRUE,
-  parallel = TRUE,
-  parallel_type = "multicore",
-  seed = 1
-)
-summary(output_extra_ss)
-```
-]
-
-.pull-right-60[
-.font-90[
-
-```
-. ===============================================================================
-. FINAL RESULTS
-. Optimized Sampling Schedule
-. Group 1: Model 1:      6
-. Group 1: Model 2: 0.9979     23     23     24     96
-. 
-. OFV = 24.6494
-. 
-. Efficiency: 
-.   ((exp(ofv_final) / exp(ofv_init))^(1/n_parameters)) = 1.6623
-. 
-. Expected relative standard error
-. (%RSE, rounded to nearest integer):
-.     Parameter   Values   RSE_0   RSE
-.            CL       10      13     9
-.             V      100      81    26
-.            KA     0.25     119    35
-.          d_CL     0.08      47    47
-.           d_V      0.1     253   124
-.          d_KA      0.2     289   120
-.    SIGMA[1,1]     0.05      24    25
-.    SIGMA[2,2]        1      41    41
-. 
-. Total running time: 23.353 seconds
-```
-]]
-
----
-
 # `PopED`: Add sample after final (SS) dose
+
+
+
 
 
 ```r
@@ -976,26 +892,6 @@ This second-to-last sample at 32 hours would be at 4 PM the day after an 8 AM fi
 
 ---
 
-.pull-left[
-
-```r
-plot_model_prediction(
-  poped_db_practical,
-  model.names = c("Day 1", "Steady state"),
-  facet_scales = "free_x",
-  model_num_points = 200
-) +
-  labs(x = "Time from dose (h)") +
-  theme_bw()
-```
-]
-
-.pull-right[
-![](slides_files/figure-html/test-plot-2-1.png)
-]
-
----
-
 # `PopED`: Sampling windows
 
 .pull-left[
@@ -1031,7 +927,7 @@ The 100 sets of simulated samples show no significant deviations from the RSEs f
 # SSE Results
 
 .pull-left[
-&lt;img src="slides_files/figure-html/unnamed-chunk-33-1.png" width="100%" /&gt;
+&lt;img src="slides_files/figure-html/unnamed-chunk-29-1.png" width="100%" /&gt;
 ]
 
 .pull-right[
@@ -1418,65 +1314,6 @@ Better, but still not good enough.
 
 ---
 
-# `PFIM`: *D*-optimal design: Another post dose sample at SS
-
-.pull-left[
-.font-90[
-
-```r
-brasTestDesign1 &lt;- addSampling(
-  brasTestDesign1,
-  SamplingTimes(
-    outcome = "RespPK1",
-    sample_time = c(5, c(120, 144, 168), 172, 336)
-  )
-)
-samplingBoundsConstraint &lt;- SamplingConstraint(
-  response = "RespPK",
-  continuousSamplingTimes = list(
-    c(0, 6),
-    c(119, 120),
-    c(143, 144),
-    c(167, 168),
-    c(168, 174),
-    c(264, 336)
-  )
-)
-```
-]
-]
-
---
-
-.pull-right[
-.font-90[
-```
-*****************************
- Optimal designs 
-*****************************
-
-5.99998869005838, 119.002565130602, 143.972085758471,
-167.031903767095, 169.343414960844, 286.225935672166                 12
-
-**********
-SE and RSE 
-**********
-
-                 Value          SE  RSE (%)
-μ_Cl             10.00  1.29838751 12.98388
-μ_ka              0.25  0.02665015 10.66006
-μ_V             100.00 10.80456819 10.80457
-ω²_Cl             0.20  0.08221782 41.10891
-ω²_ka             0.08  0.05033867 62.92333
-ω²_V              0.10  0.05118174 51.18174
-σ_inter_RespPK1   1.00  0.19844858 19.84486
-σ_slope_RespPK1   0.05  0.01098263 21.96525
-```
-]
-]
-
----
-
 # `PFIM`: *D*-optimal design: Add sample after final (SS) dose
 
 .pull-left[
@@ -1681,7 +1518,7 @@ ff &lt;- function(model_switch, xt, parameters, poped.db) {
 
 
 .center[
-&lt;img src="slides_files/figure-html/unnamed-chunk-53-1.png" width="80%" /&gt;
+&lt;img src="slides_files/figure-html/unnamed-chunk-48-1.png" width="80%" /&gt;
 ]
 
 ---
@@ -1717,7 +1554,7 @@ plot_efficiency_of_windows(
 ]
 
 .pull-right[
-&lt;img src="slides_files/figure-html/unnamed-chunk-56-1.png" width="100%" /&gt;
+&lt;img src="slides_files/figure-html/unnamed-chunk-51-1.png" width="100%" /&gt;
 ]
 
 ???
@@ -1735,7 +1572,7 @@ Again, the 100 sets of simulated samples show no significant deviations from the
 # SSE results
 
 .pull-left[
-&lt;img src="slides_files/figure-html/unnamed-chunk-57-1.png" width="100%" /&gt;
+&lt;img src="slides_files/figure-html/unnamed-chunk-52-1.png" width="100%" /&gt;
 ]
 
 .pull-right[
@@ -1945,7 +1782,7 @@ class: inverse, center, middle
 # PK and ANC simulations
 
 .center[
-&lt;img src="slides_files/figure-html/unnamed-chunk-64-1.png" width="80%" /&gt;
+&lt;img src="slides_files/figure-html/unnamed-chunk-59-1.png" width="80%" /&gt;
 ]
 
 ---
@@ -1981,7 +1818,7 @@ class: poll-slide
 
 
 .pull-left[
-&lt;img src="slides_files/figure-html/unnamed-chunk-69-1.png" width="100%" /&gt;
+&lt;img src="slides_files/figure-html/unnamed-chunk-64-1.png" width="100%" /&gt;
 ]
 
 .pull-right[

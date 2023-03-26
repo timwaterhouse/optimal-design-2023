@@ -49,7 +49,7 @@ class: title-slide
 ## with PopED, PFIM, and mrgsolve
 
 ## Tim Waterhouse & Kyle Baron <br/> Metrum Research Group
-## Julie Betrand & Romain Leroux<br/> Université de Paris, INSERM, IAME
+## Julie Bertrand & Romain Leroux<br/> Université de Paris, INSERM, IAME
 ## 28 March, 2023
 
 ---
@@ -2287,7 +2287,7 @@ background-size: cover
 
 --
 
-* Dealing with model uncertainty (e.g. $T$-optimality)
+* Dealing with model structure uncertainty (e.g. $T$-optimality)
 {{content}}
 
 --

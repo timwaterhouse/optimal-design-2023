@@ -451,7 +451,8 @@ knitr::include_graphics("pics/tools.png")
 <img src="pics/nonmem-design-webinar.png" alt="" title="" width="70%"  style="border: 3px solid red"/>
 ]
 
-.footnote[[Recording: https://sites.google.com/view/mcssig/mcs-sig#h.v7bdq6l7d86v](https://sites.google.com/view/mcssig/mcs-sig#h.v7bdq6l7d86v)]
+.footnote[[Recording: https://sites.google.com/view/mcssig/mcs-sig#h.v7bdq6l7d86v](https://sites.google.com/view/mcssig/mcs-sig#h.v7bdq6l7d86v) <br>
+`r Citet(myBib, "Bauer2021")`]
 
 ---
 
@@ -2220,6 +2221,8 @@ PrintBibliography(myBib)
 class: center, middle
 
 # Thank you
+
+timw@metrumrg.com
 
 ---
 

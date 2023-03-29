@@ -15,6 +15,8 @@ Packages:
   - PopED
   - PFIM
   - styler
+  - renderthis
+  - chromote
 
 Repos:
   - MPN: https://mpn.metworx.com/snapshots/stable/2023-01-25

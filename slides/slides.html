@@ -673,10 +673,8 @@ get_rse(FIM, poped_db)
 ```
 
 ```
-.           CL            V           KA         d_CL          d_V         d_KA 
-. 2.983332e+05 3.132099e+06 4.936376e+06 5.192188e+01 4.888612e+02 6.485818e+02 
-.   SIGMA[1,1]   SIGMA[2,2] 
-. 2.997297e+01 4.082483e+01
+.           CL            V           KA         d_CL          d_V         d_KA   SIGMA[1,1]   SIGMA[2,2] 
+. 2.983332e+05 3.132099e+06 4.936376e+06 5.192188e+01 4.888612e+02 6.485818e+02 2.997297e+01 4.082483e+01
 ```
 
 ???
@@ -697,10 +695,8 @@ get_rse(FIM2, poped_db2)
 ```
 
 ```
-.         CL          V         KA       d_CL        d_V       d_KA SIGMA[1,1] 
-.   15.48778  142.08530  223.35925   50.88485  418.53695  549.75962   29.68444 
-. SIGMA[2,2] 
-.   40.82396
+.         CL          V         KA       d_CL        d_V       d_KA SIGMA[1,1] SIGMA[2,2] 
+.   15.48778  142.08530  223.35925   50.88485  418.53695  549.75962   29.68444   40.82396
 ```
 
 ???
@@ -797,10 +793,8 @@ get_rse(FIM_final, poped_db_final)
 ```
 
 ```
-.         CL          V         KA       d_CL        d_V       d_KA SIGMA[1,1] 
-.   12.31062   86.75053  136.64068   50.42738  317.03881  419.93344   29.55819 
-. SIGMA[2,2] 
-.   28.95827
+.         CL          V         KA       d_CL        d_V       d_KA SIGMA[1,1] SIGMA[2,2] 
+.   12.31062   86.75053  136.64068   50.42738  317.03881  419.93344   29.55819   28.95827
 ```
 
 ???
@@ -879,10 +873,8 @@ get_rse(FIM_practical, poped_db_practical)
 ```
 
 ```
-.         CL          V         KA       d_CL        d_V       d_KA SIGMA[1,1] 
-.   10.15307   19.61044   22.79548   48.67831   97.63716   74.56113   26.52843 
-. SIGMA[2,2] 
-.   40.69749
+.         CL          V         KA       d_CL        d_V       d_KA SIGMA[1,1] SIGMA[2,2] 
+.   10.15307   19.61044   22.79548   48.67831   97.63716   74.56113   26.52843   40.69749
 ```
 
 ???
@@ -1533,10 +1525,8 @@ get_rse(FIM_mrg, poped_db_mrg)
 ```
 
 ```
-.         CL       VMAX         KM         V1          Q         V2       d_CL 
-.  10.874298  10.660146   7.935583   6.355286   8.894680   3.620177  38.989274 
-.     d_VMAX       d_V1 SIGMA[1,1] 
-.  32.096484  31.667595  10.775830
+.         CL       VMAX         KM         V1          Q         V2       d_CL     d_VMAX       d_V1 SIGMA[1,1] 
+.  10.874298  10.660146   7.935583   6.355286   8.894680   3.620177  38.989274  32.096484  31.667595  10.775830
 ```
 
 ---
@@ -1800,12 +1790,10 @@ get_rse(FIM_gcsf, poped_db_gcsf)
 
 
 ```
-.         KA        KEL         VD         KD       KINT        KSI        KMT 
-.   9.332963  13.760898  12.690538   8.603883   3.911012  20.404806   3.418712 
-.        KTT        NB0        SC1        SM1        SM2      d_KEL       d_VD 
-.  17.263477   4.008964  17.767424   7.190953   6.387727  35.710485  32.145586 
-.      d_KSI      d_NB0      d_SC1      d_SM1 SIGMA[1,1] SIGMA[3,3] SIGMA[4,4] 
-.  28.101024  38.071871  27.653544  26.362398   3.926952   6.505779   7.638103
+.         KA        KEL         VD         KD       KINT        KSI        KMT        KTT        NB0        SC1        SM1        SM2      d_KEL       d_VD      d_KSI      d_NB0 
+.   9.332963  13.760898  12.690538   8.603883   3.911012  20.404806   3.418712  17.263477   4.008964  17.767424   7.190953   6.387727  35.710485  32.145586  28.101024  38.071871 
+.      d_SC1      d_SM1 SIGMA[1,1] SIGMA[3,3] SIGMA[4,4] 
+.  27.653544  26.362398   3.926952   6.505779   7.638103
 ```
 
 ---
@@ -1972,49 +1960,33 @@ Image credit: [Flickr](https://www.flickr.com/photos/dmuth/6039404304)
 
 .font-80[
 
-Bauer, R. J., A. C. Hooker, and F. Mentre (2021). "Tutorial for \$
-DESIGN in NONMEM: Clinical trial evaluation and optimization". In:
-_CPT: Pharmacometrics &amp; Systems Pharmacology_ 10.12, pp. 1452-1465.
-DOI:
-[https://doi.org/10.1002/psp4.12713](https://doi.org/https%3A%2F%2Fdoi.org%2F10.1002%2Fpsp4.12713).
-eprint:
+Bauer, R. J., A. C. Hooker, and F. Mentre (2021). "Tutorial for \$ DESIGN in NONMEM: Clinical trial evaluation and optimization". In: _CPT: Pharmacometrics &amp;
+Systems Pharmacology_ 10.12, pp. 1452-1465. DOI: [https://doi.org/10.1002/psp4.12713](https://doi.org/https%3A%2F%2Fdoi.org%2F10.1002%2Fpsp4.12713). eprint:
 https://ascpt.onlinelibrary.wiley.com/doi/pdf/10.1002/psp4.12713. URL:
 [https://ascpt.onlinelibrary.wiley.com/doi/abs/10.1002/psp4.12713](https://ascpt.onlinelibrary.wiley.com/doi/abs/10.1002/psp4.12713).
 
-Foracchia, M., A. Hooker, P. Vicini, et al. (2004). "POPED, a software
-for optimal experiment design in population kinetics". In: _Comput.
-Methods Programs Biomed._ 74.1, pp. 29-46.
+Foracchia, M., A. Hooker, P. Vicini, et al. (2004). "POPED, a software for optimal experiment design in population kinetics". In: _Comput. Methods Programs
+Biomed._ 74.1, pp. 29-46.
 
-Krzyzanski, W., P. Wiczling, P. Lowe, et al. (2010). "Population
-modeling of filgrastim PK-PD in healthy adults following intravenous
-and subcutaneous administrations". In: _J. Clin. Pharmacol._ 50.9
-Suppl, pp. 101S-112S.
+Krzyzanski, W., P. Wiczling, P. Lowe, et al. (2010). "Population modeling of filgrastim PK-PD in healthy adults following intravenous and subcutaneous
+administrations". In: _J. Clin. Pharmacol._ 50.9 Suppl, pp. 101S-112S.
 
-Leroux, R., J. Seurat, H. Nagard, et al. (2022). _Design evaluation and
-optimisation in nonlinear mixed effects models with the R package
-PFIM_. Poster. Abstr 10183.
+Leroux, R., J. Seurat, H. Nagard, et al. (2022). _Design evaluation and optimisation in nonlinear mixed effects models with the R package PFIM_. Poster. Abstr
+10183.
 
-Mentre, F., A. Mallet, and D. Baccar (1997). "Optimal design in
-random-effects regression models". In: _Biometrika_ 84.2, pp. 429-442.
+Mentre, F., A. Mallet, and D. Baccar (1997). "Optimal design in random-effects regression models". In: _Biometrika_ 84.2, pp. 429-442.
 
-Nyberg, J., C. Bazzoli, K. Ogungbenro, et al. (2014). "Methods and
-software tools for design evaluation for population
-pharmacokinetics-pharmacodynamics studies". In: _Br. J. Clin.
-Pharmacol._.
+Nyberg, J., C. Bazzoli, K. Ogungbenro, et al. (2014). "Methods and software tools for design evaluation for population pharmacokinetics-pharmacodynamics
+studies". In: _Br. J. Clin. Pharmacol._.
 
-Nyberg, J., S. Ueckert, E. A. Strömberg, et al. (2012). "PopED: an
-extended, parallelized, nonlinear mixed effects models optimal design
-tool". In: _Comput. Methods Programs Biomed._ 108.2, pp. 789-805.
+Nyberg, J., S. Ueckert, E. A. Strömberg, et al. (2012). "PopED: an extended, parallelized, nonlinear mixed effects models optimal design tool". In: _Comput.
+Methods Programs Biomed._ 108.2, pp. 789-805.
 
-Retout, S., S. Duffull, and F. Mentre (2001). "Development and
-implementation of the population Fisher information matrix for the
-evaluation of population pharmacokinetic designs". In: _Comput. Methods
-Programs Biomed._ 65.2, pp. 141-151.
+Retout, S., S. Duffull, and F. Mentre (2001). "Development and implementation of the population Fisher information matrix for the evaluation of population
+pharmacokinetic designs". In: _Comput. Methods Programs Biomed._ 65.2, pp. 141-151.
 
-Retout, S. and F. Mentre (2003). "Further developments of the Fisher
-information matrix in nonlinear mixed effects models with evaluation in
-population pharmacokinetics". In: _J. Biopharm. Stat._ 13.2, pp.
-209-227.
+Retout, S. and F. Mentre (2003). "Further developments of the Fisher information matrix in nonlinear mixed effects models with evaluation in population
+pharmacokinetics". In: _J. Biopharm. Stat._ 13.2, pp. 209-227.
 
 ]
 
